@@ -1,0 +1,1 @@
+# MVC Tutorial Step 6 TODO&#10;- [x] 1. Create resources/views/posts.blade.php&#10;- [x] 2. Edit app/Http/Controllers/PostController.php (add index)&#10;- [x] 3. Edit routes/web.php (use PostController@index)&#10;- [x] 4. Test: Refresh http://127.0.0.1:8000
