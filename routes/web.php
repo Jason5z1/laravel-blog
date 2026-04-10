@@ -1,14 +1,21 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\PostController;
+Route::get('/',[PostController::class, 'index'])->name('home');
 
-Route::get('/', [PostController::class, 'index']);
+require __DIR__.'/blog.php';
 
-Route::get('/posts/create', [PostController::class, 'create']);  
-Route::post('/posts', [PostController::class, 'store']);
-Route::delete('/posts/{id}', [PostController::class, 'destroy']);
-Route::get('/posts/{id}/edit', [PostController::class, 'edit']);//open edit form
-Route::put('/posts/{id}', [PostController::class, 'update']);//submit edited form
-Route::post('/posts/{id}/comments', [PostController::class, 'storeComment']);
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';

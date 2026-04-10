@@ -1,27 +1,24 @@
 @extends('layout.app')
 @section('content')
-
 <a href="/posts/create" class="btn btn-primary mb-3">Create new article</a>
+<h2>Login/Register in navbar (welcome.blade.php) or <a href="/login">Login</a> | <a href="/register">Register</a></h2>
+@if(auth()->check())
+<p>Welcome {{ auth()->user()->name }}! <a href="/logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a></p>
+<form id="logout-form" method="POST" action="/logout" style="display:none">@csrf</form>
+@endif
 @foreach ($posts as $post)
     <div class="card mb-3">
         <div class="card-body">
-            <h5 class="card-title">{{ $post->title }}</h5>
-            <p class="card-text">{{ $post->content }}</p>
-            <h6>Comments:</h6>
-            @foreach ($post->comments as $comment)
-                <p>{{ $comment->content }}</p>
-            @endforeach
-            <form method="POST" action="/posts/{{ $post->id }}/comments">
-                @csrf
-                <input type="text" name="content" class="form-control mb-2" placeholder="Add a comment">
-                <button class = "btn btn-primary btn-sm">Submit Comment</button>
+            <h5>{{ $post->title }}</h5>
+            <p>{{ Str::limit($post->content, 100) }}</p>
+            <a href="/posts/{{ $post->id }}" class="btn btn-info btn-sm">View</a>
+            @if(auth()->check())
+            <a href="/posts/{{ $post->id }}/edit" class="btn btn-warning btn-sm">Edit</a>
+            <form method="POST" action="/posts/{{ $post->id }}" style="display:inline">
+                @csrf @method('DELETE')
+                <button class="btn btn-danger btn-sm" onclick="return confirm('Delete?')">Delete</button>
             </form>
-            <a href="/posts/{{ $post->id }}/edit" class="btn btn-warning">Edit</a>
-            <form method="POST" action="/posts/{{ $post->id }}" style="display:inline-block">
-                @csrf
-                @method('DELETE')
-                <button class="btn btn-danger">Delete</button>
-            </form>
+            @endif
         </div>
     </div>
 @endforeach
