@@ -5,6 +5,7 @@ use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/',[PostController::class, 'index'])->name('home');
+Route::post('/posts/{post}/react/{type}', [PostController::class, 'react'])->middleware('auth');
 
 require __DIR__.'/blog.php';
 
