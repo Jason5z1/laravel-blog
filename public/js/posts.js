@@ -41,33 +41,58 @@ fetch(`/posts/${postId}/react/${type}`, {
         if (likeCount) likeCount.textContent = data.likes;
         if (dislikeCount) dislikeCount.textContent = data.dislikes;
 
-if(type === 'like') {
-        const popup = btn.querySelector('.like-popup');
-        if(popup) {
-            popup.style.opacity = '1';
-            popup.style.transform = 'translateY(-20px)';
-            setTimeout(() => {
-                popup.style.opacity = '0';
-                popup.style.transform = 'translateY(0)';
-            }, 500);
-        }
-    }
-        
+if(data.userReaction === 'like') {
+    spawnPlusOne(btn);
+    setTimeout(() => spawnHeart(btn), 200);
+ }
+        const likeIcon = parent.querySelector('.like-icon');
         // Reset then apply server truth
         if (likeButton) {
             likeButton.disabled = false;
             likeButton.className = data.userReaction === 'like' ? 
-                'btn btn-sm btn-primary' : 'btn btn-sm btn-outline-primary';
+            'btn btn-sm btn-primary' : 'btn btn-sm btn-outline-primary';
         }
         if (dislikeButton) {
             dislikeButton.disabled = false;
             dislikeButton.className = data.userReaction === 'dislike' ? 
-                'btn btn-sm btn-danger' : 'btn btn-sm btn-outline-danger';
+            'btn btn-sm btn-danger' : 'btn btn-sm btn-outline-danger';
         }
     })
-    .catch(err => {
+        .catch(err => {
         console.error('Error:', err);
         // REVERT on error
         location.reload();
     });
 };
+
+function spawnHeart(btn) {
+    const popup = document.createElement('span');
+    
+    // 這裡一定要改成新的 Class 名字！
+    popup.className = 'pure-floating-heart';
+    popup.innerHTML = '💖';
+    
+    // 獲取按鈕在畫面上的絕對位置
+    const rect = btn.getBoundingClientRect();
+    popup.style.left = rect.left + 'px';
+    popup.style.top = rect.top + 'px';
+    
+    document.body.appendChild(popup);
+    
+    // 1.5秒後移除
+    setTimeout(() => popup.remove(), 1500);
+}
+
+function spawnPlusOne(btn) {
+    const popup = document.createElement('span');
+    popup.className = 'like-popup';
+    popup.textContent = '+1';
+
+    const parent = btn.parentElement;
+    parent.appendChild(popup);
+
+    popup.offsetHeight; // Force reflow for animation
+    popup.classList.add('show');
+
+    setTimeout(() => popup.remove(), 500);
+}

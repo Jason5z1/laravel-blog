@@ -31,11 +31,12 @@
 
                         <button onclick="react({{ $post->id }},'like',this)"
 class="like-btn btn btn-sm {{ $userReaction === 'like' ? 'btn-primary' : 'btn-outline-primary' }}">
-                            👍 <span class="like-count">
+                            <span class="like-icon">👍</span>
+                            <span class="like-count">
                                 {{ $post->likes->where('pivot.type', 'like')->count() }}
                             </span>
-                            <span class="like-popup">+1</span>
                         </button>
+                        {{-- like-popup moved to JS --}}
 
                         <button onclick="react({{ $post->id }},'dislike',this)"
                             class="btn btn-sm {{ $userReaction === 'dislike' ? 'btn-danger' : 'btn-outline-danger' }}">
